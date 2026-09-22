@@ -1,6 +1,7 @@
 package by.grodmir.IT_project_hub.repository;
 
-import by.grodmir.IT_project_hub.entity.Project;
+import by.grodmir.IT_project_hub.infrastructure.entity.ProjectJpaEntity;
+import by.grodmir.IT_project_hub.infrastructure.repository.ProjectJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-public class ProjectRepositoryTest {
-    private final ProjectRepository projectRepository;
+public class ProjectJpaRepositoryTest {
+    private final ProjectJpaRepository projectJpaRepository;
 
-    private Project validProject() {
-        Project project = new Project();
+    private ProjectJpaEntity validProject() {
+        ProjectJpaEntity project = new ProjectJpaEntity();
         project.setName("CRM для банка");
         project.setCustomer("ОАО \"Банк\"");
         project.setStartDate(LocalDate.of(2026, 1, 1));
@@ -29,86 +30,86 @@ public class ProjectRepositoryTest {
 
     @Test
     void shouldSaveAndFindProject() {
-        Project saved = projectRepository.save(validProject());
+        ProjectJpaEntity saved = projectJpaRepository.save(validProject());
 
         assertThat(saved.getId()).isNotNull();
-        assertThat(projectRepository.findById(saved.getId())).isPresent();
+        assertThat(projectJpaRepository.findById(saved.getId())).isPresent();
     }
 
     @Test
     void shouldUpdateProject() {
-        Project project = projectRepository.save(validProject());
+        ProjectJpaEntity project = projectJpaRepository.save(validProject());
         project.setCustomer("Новый заказчик");
-        projectRepository.saveAndFlush(project);
+        projectJpaRepository.saveAndFlush(project);
 
-        Project updated = projectRepository.findById(project.getId()).orElseThrow();
+        ProjectJpaEntity updated = projectJpaRepository.findById(project.getId()).orElseThrow();
         assertThat(updated.getCustomer()).isEqualTo("Новый заказчик");
     }
 
     @Test
     void shouldDeleteProject() {
-        Project project = projectRepository.save(validProject());
+        ProjectJpaEntity project = projectJpaRepository.save(validProject());
 
-        projectRepository.deleteById(project.getId());
+        projectJpaRepository.deleteById(project.getId());
 
-        assertThat(projectRepository.existsById(project.getId())).isFalse();
+        assertThat(projectJpaRepository.existsById(project.getId())).isFalse();
     }
 
     @Test
     void shouldAllowNullEndDate() {
-        Project project = validProject();
+        ProjectJpaEntity project = validProject();
 
-        Project saved = projectRepository.saveAndFlush(project);
+        ProjectJpaEntity saved = projectJpaRepository.saveAndFlush(project);
 
         assertThat(saved.getEndDate()).isNull();
     }
 
     @Test
     void shouldAllowSettingEndDateLaterThanStartDate() {
-        Project project = validProject();
+        ProjectJpaEntity project = validProject();
         project.setEndDate(LocalDate.of(2026, 12, 31));
 
-        Project saved = projectRepository.saveAndFlush(project);
+        ProjectJpaEntity saved = projectJpaRepository.saveAndFlush(project);
 
         assertThat(saved.getEndDate()).isEqualTo(LocalDate.of(2026, 12, 31));
     }
 
     @Test
     void shouldRejectEndDateBeforeStartDate() {
-        Project project = validProject();
+        ProjectJpaEntity project = validProject();
         project.setStartDate(LocalDate.of(2026, 5, 1));
         project.setEndDate(LocalDate.of(2026, 1, 1)); // раньше start_date
 
-        assertThatThrownBy(() -> projectRepository.saveAndFlush(project))
+        assertThatThrownBy(() -> projectJpaRepository.saveAndFlush(project))
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
 
     @Test
     void shouldRejectEndDateEqualToStartDate() {
-        Project project = validProject();
+        ProjectJpaEntity project = validProject();
         LocalDate sameDate = LocalDate.of(2026, 5, 1);
         project.setStartDate(sameDate);
         project.setEndDate(sameDate); // CHECK строго "<", равенство тоже нарушение
 
-        assertThatThrownBy(() -> projectRepository.saveAndFlush(project))
+        assertThatThrownBy(() -> projectJpaRepository.saveAndFlush(project))
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
 
     @Test
     void shouldRejectNullName() {
-        Project project = validProject();
+        ProjectJpaEntity project = validProject();
         project.setName(null);
 
-        assertThatThrownBy(() -> projectRepository.saveAndFlush(project))
+        assertThatThrownBy(() -> projectJpaRepository.saveAndFlush(project))
                 .isInstanceOf(Exception.class); // упадёт до похода в БД — Hibernate сам проверит nullable=false
     }
 
     @Test
     void shouldRejectNullStartDate() {
-        Project project = validProject();
+        ProjectJpaEntity project = validProject();
         project.setStartDate(null);
 
-        assertThatThrownBy(() -> projectRepository.saveAndFlush(project))
+        assertThatThrownBy(() -> projectJpaRepository.saveAndFlush(project))
                 .isInstanceOf(Exception.class);
     }
 }

@@ -1,6 +1,8 @@
 package by.grodmir.IT_project_hub.repository;
 
-import by.grodmir.IT_project_hub.entity.User;
+import by.grodmir.IT_project_hub.infrastructure.entity.RoleEntity;
+import by.grodmir.IT_project_hub.infrastructure.entity.UserJpaEntity;
+import by.grodmir.IT_project_hub.infrastructure.repository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,107 +21,98 @@ import static org.assertj.core.api.Assertions.within;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class UserRepositoryTest {
-    private final UserRepository userRepository;
+public class UserJpaRepositoryTest {
+    private final UserJpaRepository userJpaRepository;
     private final TestEntityManager entityManager;
 
-    private User validUser(String username) {
-        User user = new User();
+    private UserJpaEntity validUser(String username) {
+        UserJpaEntity user = new UserJpaEntity();
         user.setFullName("Иванов Иван Иванович");
         user.setUsername(username);
         user.setPassword("hashed-password-stub");
-        user.setRole("USER");
+        user.setRole(RoleEntity.USER);
         user.setCreatedAt(LocalDateTime.now());
         return user;
     }
 
     @Test
     void shouldSaveAndFindUser() {
-        User saved = userRepository.save(validUser("ivanov"));
+        UserJpaEntity saved = userJpaRepository.save(validUser("ivanov"));
 
         assertThat(saved.getId()).isNotNull();
-        assertThat(userRepository.findById(saved.getId())).isPresent();
+        assertThat(userJpaRepository.findById(saved.getId())).isPresent();
     }
 
     @Test
     void shouldUpdateUser() {
-        User saved = userRepository.saveAndFlush(validUser("petrov"));
+        UserJpaEntity saved = userJpaRepository.saveAndFlush(validUser("petrov"));
 
         saved.setFullName("Петров Пётр Петрович");
-        userRepository.saveAndFlush(saved);
+        userJpaRepository.saveAndFlush(saved);
 
-        User updated = userRepository.findById(saved.getId()).orElseThrow();
+        UserJpaEntity updated = userJpaRepository.findById(saved.getId()).orElseThrow();
         assertThat(updated.getFullName()).isEqualTo("Петров Пётр Петрович");
     }
 
     @Test
     void shouldDeleteUser() {
-        User saved = userRepository.saveAndFlush(validUser("sidorov"));
+        UserJpaEntity saved = userJpaRepository.saveAndFlush(validUser("sidorov"));
 
-        userRepository.deleteById(saved.getId());
+        userJpaRepository.deleteById(saved.getId());
 
-        assertThat(userRepository.existsById(saved.getId())).isFalse();
+        assertThat(userJpaRepository.existsById(saved.getId())).isFalse();
     }
 
     // ========== 2. Уникальность username ==========
 
     @Test
     void shouldRejectDuplicateUsername() {
-        userRepository.saveAndFlush(validUser("duplicate"));
-        User second = validUser("duplicate");
+        userJpaRepository.saveAndFlush(validUser("duplicate"));
+        UserJpaEntity second = validUser("duplicate");
 
-        assertThatThrownBy(() -> userRepository.saveAndFlush(second))
-                .isInstanceOf(DataIntegrityViolationException.class);
-    }
-
-    @Test
-    void shouldRejectInvalidRole() {
-        User user = validUser("wrongrole");
-        user.setRole("SUPERADMIN");
-
-        assertThatThrownBy(() -> userRepository.saveAndFlush(user))
+        assertThatThrownBy(() -> userJpaRepository.saveAndFlush(second))
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
 
     @Test
     void shouldAcceptAllValidRoles() {
-        assertThat(userRepository.saveAndFlush(validUser("user1")).getRole()).isEqualTo("USER");
-        assertThat(userRepository.saveAndFlush(validUser("admin1")).getRole())
+        assertThat(userJpaRepository.saveAndFlush(validUser("user1")).getRole()).isEqualTo(RoleEntity.USER);
+        assertThat(userJpaRepository.saveAndFlush(validUser("admin1")).getRole())
                 .isNotNull();
 
-        User admin = validUser("admin2");
-        admin.setRole("ADMIN");
-        assertThat(userRepository.saveAndFlush(admin).getId()).isNotNull();
+        UserJpaEntity admin = validUser("admin2");
+        admin.setRole(RoleEntity.ADMIN);
+        assertThat(userJpaRepository.saveAndFlush(admin).getId()).isNotNull();
 
-        User manager = validUser("manager1");
-        manager.setRole("MANAGER");
-        assertThat(userRepository.saveAndFlush(manager).getId()).isNotNull();
+        UserJpaEntity manager = validUser("manager1");
+        manager.setRole(RoleEntity.MANAGER);
+        assertThat(userJpaRepository.saveAndFlush(manager).getId()).isNotNull();
     }
 
     @Test
     void shouldRejectNullUsername() {
-        User user = validUser(null);
+        UserJpaEntity user = validUser(null);
 
-        assertThatThrownBy(() -> userRepository.saveAndFlush(user))
+        assertThatThrownBy(() -> userJpaRepository.saveAndFlush(user))
                 .isInstanceOf(Exception.class);
     }
 
     @Test
     void shouldRejectNullPassword() {
-        User user = validUser("nopassword");
+        UserJpaEntity user = validUser("nopassword");
         user.setPassword(null);
 
-        assertThatThrownBy(() -> userRepository.saveAndFlush(user))
+        assertThatThrownBy(() -> userJpaRepository.saveAndFlush(user))
                 .isInstanceOf(Exception.class);
     }
 
 
     @Test
     void shouldAutoPopulateCreatedAtOnPersist() {
-        User user = validUser("autotime");
+        UserJpaEntity user = validUser("autotime");
         user.setCreatedAt(null);
 
-        User saved = userRepository.saveAndFlush(user);
+        UserJpaEntity saved = userJpaRepository.saveAndFlush(user);
 
         assertThat(saved.getCreatedAt()).isNotNull();
         assertThat(saved.getCreatedAt()).isCloseTo(LocalDateTime.now(), within(5, ChronoUnit.SECONDS));
@@ -127,11 +120,11 @@ public class UserRepositoryTest {
 
     @Test
     void shouldIgnoreManuallySetCreatedAt() {
-        User user = validUser("ignoredtime");
+        UserJpaEntity user = validUser("ignoredtime");
         LocalDateTime fakeDate = LocalDateTime.of(2020, 1, 1, 0, 0);
         user.setCreatedAt(fakeDate);
 
-        User saved = userRepository.saveAndFlush(user);
+        UserJpaEntity saved = userJpaRepository.saveAndFlush(user);
 
         assertThat(saved.getCreatedAt()).isNotEqualTo(fakeDate);
         assertThat(saved.getCreatedAt()).isCloseTo(LocalDateTime.now(), within(5, ChronoUnit.SECONDS));
@@ -139,16 +132,16 @@ public class UserRepositoryTest {
 
     @Test
     void shouldNotChangeCreatedAtOnUpdate() {
-        User saved = userRepository.saveAndFlush(validUser("stabletime"));
+        UserJpaEntity saved = userJpaRepository.saveAndFlush(validUser("stabletime"));
         LocalDateTime originalCreatedAt = saved.getCreatedAt();
 
         saved.setFullName("Изменённое имя");
         saved.setCreatedAt(LocalDateTime.of(1999, 1, 1, 0, 0));
-        userRepository.saveAndFlush(saved);
+        userJpaRepository.saveAndFlush(saved);
 
         entityManager.clear();
 
-        User reloaded = userRepository.findById(saved.getId()).orElseThrow();
+        UserJpaEntity reloaded = userJpaRepository.findById(saved.getId()).orElseThrow();
         assertThat(reloaded.getCreatedAt()).isEqualTo(originalCreatedAt);
     }
 }
