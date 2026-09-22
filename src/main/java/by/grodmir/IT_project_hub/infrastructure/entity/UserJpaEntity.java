@@ -1,4 +1,4 @@
-package by.grodmir.IT_project_hub.entity;
+package by.grodmir.IT_project_hub.infrastructure.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "users")
-public class User {
+public class UserJpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -27,7 +27,8 @@ public class User {
     private String password;
 
     @Column(name = "role", nullable = false, length = 20)
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private RoleEntity role;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

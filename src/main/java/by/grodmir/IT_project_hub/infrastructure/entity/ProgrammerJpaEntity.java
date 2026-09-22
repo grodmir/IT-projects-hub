@@ -1,4 +1,4 @@
-package by.grodmir.IT_project_hub.entity;
+package by.grodmir.IT_project_hub.infrastructure.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Setter
 @Entity
 @Table(name = "programmers")
-public class Programmer {
+public class ProgrammerJpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -23,7 +23,7 @@ public class Programmer {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "project_id", nullable = false)
-    private Project project;
+    private ProjectJpaEntity project;
 
     @Column(name = "last_name", nullable = false, length = 100)
     private String lastName;
