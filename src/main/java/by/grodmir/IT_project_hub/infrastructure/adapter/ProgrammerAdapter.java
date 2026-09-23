@@ -44,4 +44,12 @@ public class ProgrammerAdapter implements ProgrammerRepository {
     public void deleteById(Long id) {
         programmerRepository.deleteById(id);
     }
+
+    @Override
+    public List<Programmer> findByProjectId(Long projectId) {
+        return programmerRepository.findByProjectId(projectId)
+                .stream()
+                .map(mapper::toModel)
+                .toList();
+    }
 }

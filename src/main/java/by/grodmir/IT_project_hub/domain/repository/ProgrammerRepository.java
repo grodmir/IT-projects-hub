@@ -10,4 +10,5 @@ public interface ProgrammerRepository {
     Optional<Programmer> findById(Long id);
     List<Programmer> findAll();
     void deleteById(Long id);
+    List<Programmer> findByProjectId(Long projectId);
 }
