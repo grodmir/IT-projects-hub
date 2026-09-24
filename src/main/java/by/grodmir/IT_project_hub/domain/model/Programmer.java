@@ -65,6 +65,21 @@ public record Programmer(
         );
     }
 
+    public Programmer withProjectId(Long projectId) {
+        return new Programmer(
+                id,
+                projectId,
+                lastName,
+                firstName,
+                middleName,
+                position,
+                workStartDate,
+                workEndDate,
+                hourlyRate,
+                fullTime
+        );
+    }
+
     private static long countWorkingDays(LocalDate from, LocalDate to) {
         return from.datesUntil(to.plusDays(1))
                 .filter(d -> d.getDayOfWeek() != DayOfWeek.SATURDAY

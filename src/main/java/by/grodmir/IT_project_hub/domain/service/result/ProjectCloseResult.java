@@ -1,4 +1,4 @@
-package by.grodmir.IT_project_hub.domain.service;
+package by.grodmir.IT_project_hub.domain.service.result;
 
 import by.grodmir.IT_project_hub.domain.model.Programmer;
 import by.grodmir.IT_project_hub.domain.model.Project;

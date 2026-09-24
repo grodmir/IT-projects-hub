@@ -6,6 +6,7 @@ import by.grodmir.IT_project_hub.domain.model.Programmer;
 import by.grodmir.IT_project_hub.domain.model.Project;
 import by.grodmir.IT_project_hub.domain.repository.ProgrammerRepository;
 import by.grodmir.IT_project_hub.domain.repository.ProjectRepository;
+import by.grodmir.IT_project_hub.domain.service.result.ProjectCloseResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
