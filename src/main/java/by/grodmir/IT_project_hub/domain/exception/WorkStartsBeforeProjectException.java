@@ -1,8 +1,16 @@
 package by.grodmir.IT_project_hub.domain.exception;
 
+import lombok.Getter;
+
 import java.time.LocalDate;
 
+@Getter
 public class WorkStartsBeforeProjectException extends RuntimeException {
+    private final Long programmerId;
+    private final Long projectId;
+    private final LocalDate programmerWorkStartDate;
+    private final LocalDate projectStartDate;
+
     public WorkStartsBeforeProjectException(
             Long programmerId,
             Long projectId,
@@ -14,5 +22,9 @@ public class WorkStartsBeforeProjectException extends RuntimeException {
                         "Work start date cannot be before project start date.",
                 programmerId, programmerWorkStartDate, projectId, projectStartDate
         ));
+        this.programmerId = programmerId;
+        this.projectId = projectId;
+        this.programmerWorkStartDate = programmerWorkStartDate;
+        this.projectStartDate = projectStartDate;
     }
 }
