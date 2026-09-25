@@ -25,7 +25,7 @@ public class ProjectService {
     private final ProgrammerRepository programmerRepository;
 
     /**
-     * Закрытие или сужение проекта. Игнорирует расширяющую дату
+     * Закрытие или сужение проекта. Игнорирует расширяющую дату в параметре
      * */
     public ProjectCloseResult closeOrShorten(Long projectId, LocalDate newEndDate) {
         Project project = projectRepository.findById(projectId)
@@ -58,7 +58,7 @@ public class ProjectService {
         Project closed = project.withEndDate(newEndDate);
         Project saved = projectRepository.save(closed);
 
-        return new  ProjectCloseResult(saved, adjusted);
+        return new ProjectCloseResult(saved, adjusted);
     }
 
     /**

@@ -1,0 +1,13 @@
+package by.grodmir.IT_project_hub.infrastructure.repository;
+
+import by.grodmir.IT_project_hub.infrastructure.entity.RefreshTokenJpaEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface RefreshTokenJpaRepository extends JpaRepository<RefreshTokenJpaEntity, Integer> {
+    Optional<RefreshTokenJpaEntity> findByToken(String token);
+    void deleteAllByUsername(String username);
+}

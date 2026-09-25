@@ -28,7 +28,7 @@ public record Programmer(
         if (workStartDate == null) {
             throw new IllegalStateException("Start date cannot be null");
         }
-        if (workEndDate != null && workEndDate.isAfter(workStartDate)) {
+        if (workEndDate != null && workEndDate.isBefore(workStartDate)) {
             throw new InvalidEmploymentPeriodException(workEndDate, workStartDate);
         }
         if (hourlyRate == null || hourlyRate.signum() < 0) {

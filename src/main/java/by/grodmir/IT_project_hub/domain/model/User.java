@@ -9,4 +9,13 @@ public record User (
         String password,
         Role role,
         LocalDateTime createdAt
-) {}
+) {
+    public User {
+        if (username == null || username.isBlank()) {
+            throw new IllegalArgumentException("Username cannot be null or empty");
+        }
+        if (password == null || password.isBlank()) {
+            throw new IllegalArgumentException("Password cannot be null or empty");
+        }
+    }
+}

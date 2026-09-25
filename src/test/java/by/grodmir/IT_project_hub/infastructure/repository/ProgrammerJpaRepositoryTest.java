@@ -1,4 +1,4 @@
-package by.grodmir.IT_project_hub.repository;
+package by.grodmir.IT_project_hub.infastructure.repository;
 
 import by.grodmir.IT_project_hub.infrastructure.entity.ProgrammerJpaEntity;
 import by.grodmir.IT_project_hub.infrastructure.entity.ProjectJpaEntity;
