@@ -19,13 +19,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class ProgrammerServiceTest {
 
     private InMemoryProjectRepository projectRepository;
-    private InMemoryProgrammerRepository programmerRepository;
     private ProgrammerService programmerService;
 
     @BeforeEach
     void setUp() {
         projectRepository = new InMemoryProjectRepository();
-        programmerRepository = new InMemoryProgrammerRepository();
+        InMemoryProgrammerRepository programmerRepository = new InMemoryProgrammerRepository();
         programmerService = new ProgrammerService(programmerRepository, projectRepository);
     }
 

@@ -1,6 +1,5 @@
 package by.grodmir.IT_project_hub.domain.service;
 
-import by.grodmir.IT_project_hub.domain.exception.InvalidCredentialsException;
 import by.grodmir.IT_project_hub.domain.exception.UsernameAlreadyTakenException;
 import by.grodmir.IT_project_hub.domain.model.Role;
 import by.grodmir.IT_project_hub.domain.model.User;

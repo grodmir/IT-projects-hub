@@ -12,12 +12,11 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 public class UserServiceTest {
 
-    private InMemoryUserRepository userRepository;
     private UserService userService;
 
     @BeforeEach
     void setUp() {
-        userRepository = new InMemoryUserRepository();
+        InMemoryUserRepository userRepository = new InMemoryUserRepository();
         userService = new UserService(userRepository, new FakePasswordEncoder());
     }
 
