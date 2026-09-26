@@ -9,6 +9,7 @@ import by.grodmir.IT_project_hub.domain.repository.ProjectRepository;
 import by.grodmir.IT_project_hub.domain.service.result.ProjectCloseResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -27,6 +28,10 @@ public class ProjectService {
     /**
      * Закрытие или сужение проекта. Игнорирует расширяющую дату в параметре
      * */
+    /* TODO аннотация Transactional пока висит на методе класса, хотя правильнее и логичнее
+     *   было бы вынести её в usecase, но поскольку сам слой application пока не реализован,
+     *   временно оставлю тут */
+    @Transactional
     public ProjectCloseResult closeOrShorten(Long projectId, LocalDate newEndDate) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(projectId));
@@ -64,6 +69,7 @@ public class ProjectService {
     /**
      * Расчёт стоимости проекта
      * */
+    @Transactional(readOnly = true)
     public BigDecimal calculateCost(Long projectId) {
         List<Programmer> programmers = programmerRepository.findByProjectId(projectId);
         BigDecimal totalSalaries = programmers.stream()

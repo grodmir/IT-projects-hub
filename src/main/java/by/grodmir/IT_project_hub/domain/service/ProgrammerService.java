@@ -9,6 +9,7 @@ import by.grodmir.IT_project_hub.domain.repository.ProgrammerRepository;
 import by.grodmir.IT_project_hub.domain.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +17,10 @@ public class ProgrammerService {
     private final ProgrammerRepository programmerRepository;
     private final ProjectRepository projectRepository;
 
+    /* TODO аннотация Transactional пока висит на методе класса, хотя правильнее и логичнее
+     *   было бы вынести её в usecase, но поскольку сам слой application пока не реализован,
+     *   временно оставлю тут */
+    @Transactional
     public Programmer saveWithValidation(Programmer programmer) {
         Project project = projectRepository.findById(programmer.projectId()).orElseThrow(
                 () -> new ProjectNotFoundException(programmer.projectId())

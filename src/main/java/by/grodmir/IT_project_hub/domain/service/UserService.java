@@ -6,6 +6,7 @@ import by.grodmir.IT_project_hub.domain.model.User;
 import by.grodmir.IT_project_hub.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -14,6 +15,10 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    /* TODO аннотация Transactional пока висит на методе класса, хотя правильнее и логичнее
+    *   было бы вынести её в usecase, но поскольку сам слой application пока не реализован,
+    *   временно оставлю тут */
+    @Transactional
     public User register(String fullName, String username, String rawPassword) {
         String normalizedUsername = normalizeUsername(username);
 
