@@ -4,9 +4,9 @@ import by.grodmir.IT_project_hub.domain.model.RefreshToken;
 import by.grodmir.IT_project_hub.domain.repository.RefreshTokenRepository;
 import by.grodmir.IT_project_hub.infrastructure.mapper.RefreshTokenMapper;
 import by.grodmir.IT_project_hub.infrastructure.repository.RefreshTokenJpaRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 

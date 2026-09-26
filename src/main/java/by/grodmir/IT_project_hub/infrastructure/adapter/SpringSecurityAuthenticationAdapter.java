@@ -2,8 +2,8 @@ package by.grodmir.IT_project_hub.infrastructure.adapter;
 
 import by.grodmir.IT_project_hub.domain.model.AuthTokens;
 import by.grodmir.IT_project_hub.domain.service.AuthenticationPort;
+import by.grodmir.IT_project_hub.domain.service.RefreshTokenService;
 import by.grodmir.IT_project_hub.infrastructure.security.JwtService;
-import by.grodmir.IT_project_hub.infrastructure.security.RefreshTokenServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,7 +17,7 @@ public class SpringSecurityAuthenticationAdapter implements AuthenticationPort {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
-    private final RefreshTokenServiceImpl refreshTokenService;
+    private final RefreshTokenService refreshTokenService;
 
     public AuthTokens authenticate(String username, String rawPassword) {
         authenticationManager.authenticate(
